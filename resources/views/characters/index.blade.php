@@ -3,6 +3,9 @@
 @section('content')
 <h1 class="text-primary text-center">Rick and morty</h1>
 
+{{-- pop up --}}
+@include('includes.message')
+
 <a href=" {{ route( 'characters.create' ) }} " class="btn btn-success">Crea personaggio</a>
 
 <table class="table">
@@ -43,8 +46,20 @@
             <td>
                 {{ $character->origin }}
             </td>
-            <td>
-                <a href=" {{ route( 'characters.show', $character->id ) }} " class="btn btn-primary">view</a>
+            <td class="">
+                <a href=" {{ route( 'characters.show', $character->id ) }} " class="btn btn-primary">View</a>
+                <a href=" {{ route( 'characters.edit', $character->id ) }} " class="btn btn-warning">Modifica</a>
+
+                <form action="{{ route( 'characters.destroy', $character->id ) }}"
+                    method="POST"
+                    class="delete-form"
+                    data-name="{{ $character->name }}"
+                    >
+                    @method('DELETE')
+                    @csrf
+                    <button class="btn btn-danger" type="submit">Elimina</button>
+                </form>
+
             </td>
         </tr>
         @empty
@@ -52,8 +67,8 @@
         @endforelse
     </tbody>
 </table>
+@endsection
 
-
-
-
+@section('delete-message')
+    <script src=" {{ asset('js/deleteMessage.js') }} "></script>
 @endsection

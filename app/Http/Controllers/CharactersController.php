@@ -39,6 +39,16 @@ class CharactersController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        //validazione
+        $request->validate(
+            [
+                'name' => 'required'
+            ]
+        );
+
+
         $data = $request->all();
 
         $new_character = new Character();
@@ -68,9 +78,9 @@ class CharactersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit( Character $character )
     {
-        //
+        return view( 'characters.edit', compact('character') );
     }
 
     /**
@@ -80,9 +90,25 @@ class CharactersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Character $character)
     {
-        //
+
+        //validazione
+        $request->validate(
+            [
+                'name' => 'required'
+            ]
+        );
+
+        $data = $request->all();
+        $character->update($data);
+
+        // $data = $request->all();
+        // $character->fill($data);
+        // $character->save();
+
+        return redirect()->route( 'characters.show', $character )->with('message', "Hai aggiornato con successo: $character->name");
+
     }
 
     /**
@@ -91,8 +117,11 @@ class CharactersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Character $character)
     {
-        //
+        // $character = Character::findOrFail($id);
+
+        $character->delete();
+        return redirect()->route( 'characters.index' )->with('message', "Hai eliminato con successo: $character->name");
     }
 }
